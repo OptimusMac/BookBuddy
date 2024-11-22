@@ -1,7 +1,10 @@
 package ru.optimius.bookbuddy.controllers;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.optimius.bookbuddy.dto.BookDTO;
 import ru.optimius.bookbuddy.entities.BookEntity;
 import ru.optimius.bookbuddy.service.BookService;
+import ru.optimius.bookbuddy.service.GradeService;
 import ru.optimius.bookbuddy.utils.searchs.Strategy;
 
 @RestController
@@ -20,7 +24,10 @@ import ru.optimius.bookbuddy.utils.searchs.Strategy;
 @RequestMapping("/book")
 public class BookController {
 
+  private static final String GRADE_KEY_PREFIX = "book:grade:";
+  private RedisTemplate<String, Float> redisTemplate;
   private BookService bookService;
+  private GradeService gradeService;
 
 
   @PostMapping("/create")
@@ -55,9 +62,32 @@ public class BookController {
       return bookService.search(name, Strategy.NAME, limit);
     } else if (genre != null) {
       return bookService.search(genre, Strategy.GENRE, limit);
-    } else if(price != null){
+    } else if (price != null) {
       return bookService.search(price, Strategy.PRICE, limit);
-    }else
+    } else {
       return bookService.search(rating, Strategy.RATING, limit);
+    }
+  }
+
+
+  @GetMapping("/rating")
+  public float ratingBook(@RequestParam Long id) {
+    Float value = getGrade(id);
+    if(value == null){
+      Optional<BookEntity> book = bookService.findById(id);
+      value = book.map(bookEntity -> gradeService.average(bookEntity)).orElse(0.0F);
+    }
+    saveGrade(id, value);
+    return value;
+  }
+
+  public void saveGrade(Long bookId, Float grade) {
+    String key = GRADE_KEY_PREFIX + bookId;
+    redisTemplate.opsForValue().set(key, grade, 1, TimeUnit.DAYS);
+  }
+
+  public Float getGrade(Long bookId) {
+    String key = GRADE_KEY_PREFIX + bookId;
+    return redisTemplate.opsForValue().get(key);
   }
 }

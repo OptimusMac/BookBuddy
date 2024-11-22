@@ -13,14 +13,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Value;
 import lombok.experimental.FieldDefaults;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "books")
 public class BookEntity extends BaseEntity {
 
@@ -46,5 +48,10 @@ public class BookEntity extends BaseEntity {
   public void setBackInstant(int backInstant) {
     Instant now = Instant.now();
     this.backInstant = now.plus(backInstant, ChronoUnit.DAYS);
+  }
+
+  public float getRating() {
+    float scale = (float) Math.pow(10, 1);
+    return Math.round(rating * scale) / scale;
   }
 }

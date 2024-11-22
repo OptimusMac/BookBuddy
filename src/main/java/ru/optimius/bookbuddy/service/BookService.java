@@ -2,42 +2,46 @@ package ru.optimius.bookbuddy.service;
 
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
-import static java.lang.Long.parseLong;
 
-import java.awt.print.Book;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.optimius.bookbuddy.dto.BookDTO;
+import ru.optimius.bookbuddy.mapper.UserMapper;
 import ru.optimius.bookbuddy.entities.BookEntity;
 import ru.optimius.bookbuddy.repositories.BookRepository;
 import ru.optimius.bookbuddy.utils.searchs.Strategy;
 
 @Service
 @AllArgsConstructor
-public class BookService extends MapManager{
+public class BookService {
 
 
   private BookRepository bookRepository;
+  private UserMapper userMapper;
 
 
   @Transactional
   public BookDTO create(BookEntity bookEntity) {
     BookEntity createBook = bookRepository.save(bookEntity);
 
-    return toBookDTO(createBook);
+    return userMapper.toBookDTO(createBook);
+  }
+  @Transactional(readOnly = true)
+  public Optional<BookEntity> findById(Long id){
+    return bookRepository.findById(id);
   }
 
   @Transactional(readOnly = true)
   public BookDTO findBook(Long id) {
     BookEntity bookEntity = bookRepository.getReferenceById(id);
-    return toBookDTO(bookEntity);
+    return userMapper.toBookDTO(bookEntity);
   }
 
   @Transactional
@@ -54,12 +58,12 @@ public class BookService extends MapManager{
   public Collection<BookDTO> findAll() {
     return bookRepository.findAll()
         .stream()
-        .map(this::toBookDTO)
+        .map(userMapper::toBookDTO)
         .toList();
   }
 
   @Transactional(readOnly = true)
-  public Collection<BookDTO> search(String element, Strategy strategy, Integer limit){
+  public Collection<BookDTO> search(String element, Strategy strategy, Integer limit) {
     return findByStrategy(element, strategy, limit);
   }
 
@@ -70,7 +74,7 @@ public class BookService extends MapManager{
       case NAME:
         return bookRepository.findByName(element)
             .stream()
-            .map(this::toBookDTO)
+            .map(userMapper::toBookDTO)
             .limit(limit)
             .collect(Collectors.toList());
 
@@ -78,7 +82,7 @@ public class BookService extends MapManager{
         Integer price = parseInt(element);
         return bookRepository.findByPrice(price)
             .stream()
-            .map(this::toBookDTO)
+            .map(userMapper::toBookDTO)
             .limit(limit)
             .collect(Collectors.toList());
 
@@ -86,14 +90,14 @@ public class BookService extends MapManager{
         Float rating = parseFloat(element);
         return bookRepository.findByRating(rating)
             .stream()
-            .map(this::toBookDTO)
+            .map(userMapper::toBookDTO)
             .limit(limit)
             .collect(Collectors.toList());
 
       case GENRE:
         return bookRepository.findByGenresContaining(element)
             .stream()
-            .map(this::toBookDTO)
+            .map(userMapper::toBookDTO)
             .limit(limit)
             .collect(Collectors.toList());
 
@@ -101,8 +105,6 @@ public class BookService extends MapManager{
         return List.of();
     }
   }
-
-
 
 
 }

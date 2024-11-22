@@ -6,10 +6,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 
 @MappedSuperclass
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 public abstract class BaseEntity {
 

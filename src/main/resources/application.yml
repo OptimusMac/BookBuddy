@@ -13,3 +13,6 @@ spring:
         format_sql: true
   application:
     name: BookBuddy
+  redis:
+    host: localhost
+    port: 6379
