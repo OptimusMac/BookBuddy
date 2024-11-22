@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class UserEntity extends BaseEntity {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
-  @JoinColumn(name = "users")
+  @JoinTable(
+      name = "users_book",
+      joinColumns = @JoinColumn(name = "users_id"),
+      inverseJoinColumns = @JoinColumn(name = "books_id")
+  )
   List<BookEntity> orderBooks = new ArrayList<>();
 }
