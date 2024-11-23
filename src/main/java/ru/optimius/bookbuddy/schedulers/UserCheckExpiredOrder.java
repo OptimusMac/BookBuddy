@@ -27,7 +27,7 @@ public class UserCheckExpiredOrder {
   private JavaMailSender mailSender;
 
   @SneakyThrows
-  @Scheduled(fixedRate = 1000)
+  @Scheduled(cron = "0 0 9 * * ?")
   public void checkUsers() {
     for (UserEntity userEntity : userRepository.findAll()) {
       Collection<OrderEntity> bookExpired = findExpiredBook(userEntity);
