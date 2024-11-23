@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +24,7 @@ import ru.optimius.bookbuddy.utils.searchs.Strategy;
 public class BookController {
 
   private static final String GRADE_KEY_PREFIX = "book:grade:";
-  private RedisTemplate<String, Float> redisTemplate;
+  //private RedisTemplate<String, Float> redisTemplate;
   private BookService bookService;
   private GradeService gradeService;
 
@@ -70,24 +69,24 @@ public class BookController {
   }
 
 
-  @GetMapping("/rating")
-  public float ratingBook(@RequestParam Long id) {
-    Float value = getGrade(id);
-    if(value == null){
-      Optional<BookEntity> book = bookService.findById(id);
-      value = book.map(bookEntity -> gradeService.average(bookEntity)).orElse(0.0F);
-    }
-    saveGrade(id, value);
-    return value;
-  }
+  //@GetMapping("/rating")
+  //  public float ratingBook(@RequestParam Long id) {
+  //    //Float value = getGrade(id);
+  //    if(value == null){
+  //      Optional<BookEntity> book = bookService.findById(id);
+  //      value = book.map(bookEntity -> gradeService.average(bookEntity)).orElse(0.0F);
+  //    }
+  //    //saveGrade(id, value);
+  //    return value;
+  //  }
 
-  public void saveGrade(Long bookId, Float grade) {
-    String key = GRADE_KEY_PREFIX + bookId;
-    redisTemplate.opsForValue().set(key, grade, 1, TimeUnit.DAYS);
-  }
-
-  public Float getGrade(Long bookId) {
-    String key = GRADE_KEY_PREFIX + bookId;
-    return redisTemplate.opsForValue().get(key);
-  }
+//  public void saveGrade(Long bookId, Float grade) {
+//    String key = GRADE_KEY_PREFIX + bookId;
+//    redisTemplate.opsForValue().set(key, grade, 1, TimeUnit.DAYS);
+//  }
+//
+//  public Float getGrade(Long bookId) {
+//    String key = GRADE_KEY_PREFIX + bookId;
+//    return redisTemplate.opsForValue().get(key);
+//  }
 }

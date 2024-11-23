@@ -28,8 +28,8 @@ public class UserController {
   }
 
   @PutMapping("/book/order")
-  public ResponseEntity<?> orderBook(@RequestParam Long userID, @RequestParam Long bookID){
-    return userService.orderBook(userID, bookID);
+  public ResponseEntity<?> orderBook(@RequestParam Long userID, @RequestParam Long bookID, @RequestParam Integer time){
+    return userService.orderBook(userID, bookID, time);
   }
 
   @GetMapping("/all")

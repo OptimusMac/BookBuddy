@@ -16,3 +16,13 @@ spring:
   redis:
     host: localhost
     port: 6379
+  mail:
+    host: smtp.mail.ru
+    port: 587
+    username: jormo2@mail.ru
+    password: F7Qk8BGYNmMuKtXjPyAP
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+image:
+  upload-dir: src/main/resources/static

@@ -3,15 +3,19 @@ package ru.optimius.bookbuddy.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +23,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Data
@@ -35,6 +40,8 @@ public class BookEntity extends BaseEntity {
   String author;
   Instant backInstant;
   float rating;
+
+  UUID uuid = UUID.randomUUID();
 
   @OneToMany
   @JoinTable(
@@ -54,4 +61,6 @@ public class BookEntity extends BaseEntity {
     float scale = (float) Math.pow(10, 1);
     return Math.round(rating * scale) / scale;
   }
+
+
 }

@@ -7,7 +7,7 @@ public record UserDTO(
     int id,
     String firstName,
     String secondName,
-    List<BookDTO> orderBooks,
+    List<OrderDTO> orderBooks,
     String email
 ) {
 

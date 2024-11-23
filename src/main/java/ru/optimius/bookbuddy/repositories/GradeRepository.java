@@ -7,6 +7,5 @@ import ru.optimius.bookbuddy.entities.GradeEntity;
 
 public interface  GradeRepository extends JpaRepository<GradeEntity, Long> {
   Optional<GradeEntity> findByUserIdAndBookEntityId(Long userId, Long bookId);
-  List<GradeEntity> findByUserId(Long userId);
   boolean existsByUserIdAndBookEntityId(Long userID, Long bookID);
 }
