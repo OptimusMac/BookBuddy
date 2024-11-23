@@ -72,7 +72,7 @@ public class UserCheckExpiredOrder {
           .append("<td>").append(book.getPrice()).append(" руб.</td>")
           .append("<td>").append(order.getInstant()).append("</td>")
           .append("<td><img src=\"http://localhost:8080/photo/upload/")
-          .append(book.getId()) // Предположим, что у каждой книги есть уникальный ID
+          .append(book.getId())
           .append("\" alt=\"Cover\" width=\"50\"></td>")
           .append("</tr>");
     }

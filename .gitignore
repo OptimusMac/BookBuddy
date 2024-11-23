@@ -33,3 +33,5 @@ build/
 .vscode/
 /.mvn/
 /road_map
+/src/main/resources/application.yml
+/src/main/resources/static/*
